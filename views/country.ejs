@@ -1,0 +1,48 @@
+<%- include("partials/header"); -%>
+<main>
+    <button class="back-to-home"><i class="fas fa-arrow-left"></i><span>Back</span></button>
+    <div class="container">
+        <div class="left-country-flag">
+            <img src="<%= countryInfo.flag %>" alt="<%= countryInfo.name %>-img">
+        </div>
+        <div class="right-content">
+            <h2 class="country-name"><%= countryInfo.name %></h2>
+            <div class="country-details">
+            <div class="mid-right-content">
+                <p><span class="country-description">Continent: </span><%= countryInfo.continent %></p>
+                <p><span class="country-description">Population: </span><%= countryInfo.population %></p>
+                <p><span class="country-description">Region: </span><%= countryInfo.region %></p>
+                <p><span class="country-description">Sub Region: </span><%= countryInfo.subRegion %></p>
+            </div>
+            <div class="far-right-content">
+                <p><span class="country-description">Capital: </span><%= countryInfo.capital %></p>
+                <p><span class="country-description">Top Level Domain: </span><%= countryInfo.topLevelDomain %></p>
+                <p><span class="country-description">Currencies: </span>
+                    <% for(let curr in countryInfo.currencies) { %>
+                        <% for(let x in countryInfo.currencies[curr]) { %>
+                            <p><span class="currencies"><%= x %>-></span> <%= countryInfo.currencies[curr][x] %></p>
+                        <% } %>
+                    <% } %>
+                </p>
+                <p><span class="country-description">Languages: </span>
+                    <% for(let lang in countryInfo.languages) { %>
+                        <span><%= countryInfo.languages[lang] %> </span>
+                    <% } %>
+                </p>
+            </div>
+            </div>
+            <div class="border-countries">
+                <p class="country-description">Border Countries:
+                    <% if(countryInfo.borders() !== undefined) {  %>
+                    <% for(let i=0; i<countryInfo.borders().length; i++) { %>
+                        <a href="/country?name=<%= countryInfo.borders()[i] %>">
+                        <span id="<%= countryInfo.borders()[i] %>" class="border-span"><%= countryInfo.borders()[i] %></span>
+                        </a>
+                    <% } %>
+                    <% } %>
+                </p>
+            </div>
+        </div>
+    </div>
+</main>
+<%- include("partials/footer"); -%>
