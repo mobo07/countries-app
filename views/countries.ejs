@@ -1,52 +1,65 @@
 <%- include("partials/header"); -%>
 
-    <main>
-        <div class="top-section">
-            <div class="search-wrapper">
-            <div class="search-bar">
-                <span><i class="fas fa-search"></i></span>
-                <input type="search" class="search-input" contenteditable="true" placeholder="Search for a country...">
-            </div>
-            <div class="auto-complete-box">
-                
-            </div>
-            </div>
-            <div class="filter-section">
-                <div class="filter-header">
-                    <p>Filter by Region</p>
-                    <span id="filter-menu"><i class="fas fa-angle-down"></i></span>
-                </div>
-                <ul class="filter-drop-down">
-                    <li class="region" id="africa"><a href="">Africa</a></li>
-                    <li class="region" id="america"><a href="">America</a></li>
-                    <li class="region" id="asia"><a href="">Asia</a></li>
-                    <li class="region" id="europe"><a href="">Europe</a></li>
-                    <li class="region" id="oceania"><a href="">Oceania</a></li>
-                </ul>
-            </div>
-        </div>
+<main>
+  <div class="top-section">
+    <div class="search-wrapper">
+      <div class="search-bar">
+        <span><i class="fas fa-search"></i></span>
+        <input
+          type="search"
+          class="search-input"
+          contenteditable="true"
+          placeholder="Search for a country..."
+        />
+      </div>
+      <div class="auto-complete-box"></div>
+    </div>
+    <div class="filter-section">
+      <div class="filter-header">
+        <p>Filter by Region</p>
+        <span id="filter-menu"><i class="fas fa-angle-down"></i></span>
+      </div>
+      <ul class="filter-drop-down">
+        <li class="region" id="africa"><a href="">Africa</a></li>
+        <li class="region" id="america"><a href="">America</a></li>
+        <li class="region" id="asia"><a href="">Asia</a></li>
+        <li class="region" id="europe"><a href="">Europe</a></li>
+        <li class="region" id="oceania"><a href="">Oceania</a></li>
+      </ul>
+    </div>
+  </div>
 
-        <div class="country-container">
-            
-            <% for(let i=0; i < countryDetails.length; i++) { %>
-                <a href="/country?name=<%= countryDetails[i].name %>">
-                <div class="country">
-                    <div class="country-flag">
-                        <img src="<%= countryDetails[i].flag %>" alt="flag-img">
-                    </div>
-                    <div class="country-info">
-                        <h3 class="country-name name"><%= countryDetails[i].name %></h3>
-                        <p><span>Population:</span> <%= countryDetails[i].population %> </p>
-                        <p><span>Region:</span> <%= countryDetails[i].region %> </p>
-                        <p><span>Capital:</span> <%= countryDetails[i].capital %> </p>
-                    </div>
-                </div>
-                </a>
-            <% } %> 
+  <div class="country-container">
+    <% for(let i=0; i < countryDetails.length; i++) { %>
+    <a href="/country?name=<%= countryDetails[i].name %>">
+      <div class="country">
+        <div class="country-flag">
+          <img src="<%= countryDetails[i].flag %>" alt="flag-img" />
         </div>
-    </main>
+        <div class="country-info">
+          <h3 class="country-name name"><%= countryDetails[i].name %></h3>
+          <p><span>Population:</span> <%= countryDetails[i].population %></p>
+          <p><span>Region:</span> <%= countryDetails[i].region %></p>
+          <p><span>Capital:</span> <%= countryDetails[i].capital %></p>
+        </div>
+      </div>
+    </a>
+    <% } %>
+  </div>
+  <div class="backdrop"></div>
+  <div class="loader">
+    <div class="lds-facebook">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+</main>
 
-    <%- include("partials/footer"); -%>
+<div class="error-message">Something went wrong...</div>
+<div class="back-to-top"><i class="fas fa-arrow-up"></i></div>
+
+<%- include("partials/footer"); -%>
 <!-- <i class="fas fa-search"></i> -->
 <!-- <i class="fas fa-moon"></i> -->
 <!-- <i class="fas fa-angle-down"></i> -->

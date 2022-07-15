@@ -1,11 +1,13 @@
 import express from "express";
 import bodyParser from "body-parser";
 import fetch from "node-fetch";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
+app.use(cookieParser());
 app.set("view engine", "ejs");
 
 const countries = [];
@@ -33,9 +35,13 @@ app.get("/", (req, res) => {
         }
     })
     .then(() => {
-        res.render("countries", {countryDetails: countries});
+        if(!req.cookies.userPreference)
+        res.cookie("userPreference", "light");
+
+        let userPreference = req.cookies;
+        res.render("countries", {countryDetails: countries, userPreference: userPreference.userPreference});
     })
-    .catch(error => console.log(error));
+    .catch(error => (console.log(error)));
 });
 
 let countryObj = {};
@@ -63,7 +69,8 @@ app.get("/country", (req, res) => {
         };
     })
     .then(() => {
-        res.render("country", {countryInfo: countryObj});
+        let userPreference = req.cookies;
+        res.render("country", {countryInfo: countryObj, userPreference: userPreference.userPreference});
     })
     .catch(error => console.log(error));
         function getCountryAcronymName(...args) {
@@ -80,7 +87,8 @@ app.get("/country", (req, res) => {
 });
 
 app.get("/error", (req, res) => {
-    res.render("error");
+    let userPreference = req.cookies;
+    res.render("error", {userPreference: userPreference.userPreference});
 });
 
 app.listen(process.env.PORT || 5000, () => {
