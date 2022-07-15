@@ -5,7 +5,7 @@ import cookieParser from "cookie-parser";
 
 const app = express();
 
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use(cookieParser());
 app.set("view engine", "ejs");
@@ -13,84 +13,96 @@ app.set("view engine", "ejs");
 const countries = [];
 
 app.get("/", (req, res) => {
-    fetch("https://restcountries.com/v3.1/all")
-    .then(response => response.json())
-    .then(data => {
-        if(countries.length === 0) {
-            data.forEach(country => {
-                countries.push({
-                    flag: country.flags.png,
-                    name: country.name.common,
-                    population: country.population.toLocaleString(),
-                    region: country.region,
-                    capital: country.capital,
-                    subRegion: country.subregion,
-                    continent: country.continents,
-                    topLevelDomain: country.tld,
-                    currencies: country.currencies,
-                    languages: country.languages,
-                    countryAcronym: country.cca3
-                });
-            });
-        }
+  fetch("https://restcountries.com/v3.1/all")
+    .then((response) => response.json())
+    .then((data) => {
+      if (countries.length === 0) {
+        data.forEach((country) => {
+          countries.push({
+            flag: country.flags.png,
+            name: country.name.common,
+            population: country.population.toLocaleString(),
+            region: country.region,
+            capital: country.capital,
+            subRegion: country.subregion,
+            continent: country.continents,
+            topLevelDomain: country.tld,
+            currencies: country.currencies,
+            languages: country.languages,
+            countryAcronym: country.cca3,
+          });
+        });
+      }
     })
     .then(() => {
-        if(!req.cookies.userPreference)
+      let userTheme = "light";
+      if (req.cookies.userPreference) {
+        userTheme = req.cookies.userPreference;
+      } else {
         res.cookie("userPreference", "light");
-
-        let userPreference = req.cookies;
-        res.render("countries", {countryDetails: countries, userPreference: userPreference.userPreference});
+      }
+      res.render("countries", {
+        countryDetails: countries,
+        userPreference: userTheme,
+      });
     })
-    .catch(error => (console.log(error)));
+    .catch((error) => console.log(error));
 });
 
 let countryObj = {};
 app.get("/country", (req, res) => {
-    const countryName = req.query.name;
-    fetch("https://restcountries.com/v3.1/name/" + countryName)
-    .then(response => response.json())
-    .then(data => {
-        countryObj = {
-            flag: data[0].flags.png,
-            name: data[0].name.common,
-            population: data[0].population.toLocaleString(),
-            region: data[0].region,
-            capital: data[0].capital,
-            subRegion: data[0].subregion,
-            continent: data[0].continents,
-            topLevelDomain: data[0].tld,
-            currencies: data[0].currencies,
-            languages: data[0].languages,
-            borders: function() {
-                if(data[0].borders === undefined) 
-                return undefined;
-                else return getCountryAcronymName(...data[0].borders);
-            }
-        };
+  const countryName = req.query.name;
+  fetch("https://restcountries.com/v3.1/name/" + countryName)
+    .then((response) => response.json())
+    .then((data) => {
+      countryObj = {
+        flag: data[0].flags.png,
+        name: data[0].name.common,
+        population: data[0].population.toLocaleString(),
+        region: data[0].region,
+        capital: data[0].capital,
+        subRegion: data[0].subregion,
+        continent: data[0].continents,
+        topLevelDomain: data[0].tld,
+        currencies: data[0].currencies,
+        languages: data[0].languages,
+        borders: function () {
+          if (data[0].borders === undefined) return undefined;
+          else return getCountryAcronymName(...data[0].borders);
+        },
+      };
     })
     .then(() => {
-        let userPreference = req.cookies;
-        res.render("country", {countryInfo: countryObj, userPreference: userPreference.userPreference});
+      let userTheme = "light";
+      if (req.cookies.userPreference) {
+        userTheme = req.cookies.userPreference;
+      } else {
+        res.cookie("userPreference", "light");
+      }
+      res.render("country", {
+        countryInfo: countryObj,
+        userPreference: userTheme,
+      });
     })
-    .catch(error => console.log(error));
-        function getCountryAcronymName(...args) {
-                let arr = [];
-                    args.forEach(arg => {
-                        countries.filter(country => {
-                             if(arg === country.countryAcronym) {
-                                 arr.push(country.name);
-                             }    
-                        });
-                    });
-                    return arr;
+    .catch((error) => console.log(error));
+  function getCountryAcronymName(...args) {
+    let arr = [];
+    args.forEach((arg) => {
+      countries.filter((country) => {
+        if (arg === country.countryAcronym) {
+          arr.push(country.name);
         }
+      });
+    });
+    return arr;
+  }
 });
 
 app.get("/error", (req, res) => {
-    let userPreference = req.cookies;
-    res.render("error", {userPreference: userPreference.userPreference});
+  let userPreference = req.cookies;
+  res.render("error", { userPreference: userPreference.userPreference });
 });
 
 app.listen(process.env.PORT || 5000, () => {
-    console.log("server is running on port 5000");
+  console.log("server is running on port 5000");
 });
